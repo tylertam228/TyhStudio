@@ -1,0 +1,1761 @@
+/* ========================================
+   像素冒險王 - 復古 8-bit 像素風格
+   Discord Activity 遊戲大廳
+   ======================================== */
+
+/* 引入像素字型 */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+/* CSS 變數 - 復古像素主題 (16 色調色盤) */
+:root {
+  /* 主色調 - 經典 8-bit */
+  --color-black: #0f0f23;
+  --color-dark-navy: #1a1a2e;
+  --color-navy: #16213e;
+  --color-dark-gray: #2d2d44;
+  --color-gray: #4a4a68;
+  --color-light-gray: #8b8b8b;
+  
+  /* 亮色 */
+  --color-white: #ffffff;
+  --color-cream: #f0f0dc;
+  
+  /* 強調色 */
+  --color-green: #00ff00;
+  --color-green-dark: #00aa00;
+  --color-yellow: #ffff00;
+  --color-yellow-dark: #cccc00;
+  --color-red: #ff0000;
+  --color-red-dark: #aa0000;
+  --color-blue: #0088ff;
+  --color-blue-dark: #0055aa;
+  --color-magenta: #ff00ff;
+  --color-cyan: #00ffff;
+  
+  /* 背景 */
+  --color-bg: #0f0f23;
+  --color-bg-card: #1a1a2e;
+  --color-bg-elevated: #2d2d44;
+  
+  /* 陣營色 */
+  --color-wolf: #ff0000;
+  --color-village: #00ff00;
+  
+  /* 邊框 - 像素風格 */
+  --border-pixel: 4px solid var(--color-light-gray);
+  --border-pixel-highlight: 4px solid var(--color-green);
+  --border-pixel-gold: 4px solid var(--color-yellow);
+  
+  /* 字型 */
+  --font-pixel: 'Press Start 2P', cursive;
+  --font-pixel-alt: 'VT323', monospace;
+  
+  /* 像素單位 */
+  --pixel: 4px;
+  
+  /* 動畫 */
+  --blink-speed: 0.5s;
+}
+
+/* 全域重置 */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* 禁用抗鋸齒以保持像素感 */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-pixel);
+  background: var(--color-bg);
+  color: var(--color-cream);
+  line-height: 1.8;
+  font-size: 12px;
+  /* CRT 效果 */
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+}
+
+#root {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* CRT 掃描線覆蓋層 */
+#root::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  animation: scanline 0.1s linear infinite;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(3px); }
+}
+
+/* CRT 螢幕曲面效果 */
+#root::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9998;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+}
+
+/* 選取文字樣式 */
+::selection {
+  background: var(--color-green);
+  color: var(--color-black);
+}
+
+/* ========================================
+   像素風格通用元件
+   ======================================== */
+
+/* 像素邊框卡片 */
+.pixel-card {
+  background: var(--color-bg-card);
+  border: var(--border-pixel);
+  position: relative;
+  /* 像素化陰影 */
+  box-shadow: 
+    var(--pixel) var(--pixel) 0 var(--color-dark-gray),
+    calc(var(--pixel) * 2) calc(var(--pixel) * 2) 0 rgba(0,0,0,0.5);
+}
+
+/* 像素按鈕 */
+.pixel-btn {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  padding: 12px 24px;
+  background: var(--color-dark-gray);
+  color: var(--color-cream);
+  border: var(--border-pixel);
+  cursor: pointer;
+  text-transform: uppercase;
+  position: relative;
+  transition: none;
+  /* 3D 像素效果 */
+  box-shadow: 
+    var(--pixel) var(--pixel) 0 var(--color-black);
+}
+
+.pixel-btn:hover {
+  background: var(--color-gray);
+  transform: translate(2px, 2px);
+  box-shadow: 
+    2px 2px 0 var(--color-black);
+}
+
+.pixel-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.pixel-btn.primary {
+  background: var(--color-green-dark);
+  border-color: var(--color-green);
+  color: var(--color-black);
+}
+
+.pixel-btn.primary:hover {
+  background: var(--color-green);
+}
+
+.pixel-btn.danger {
+  background: var(--color-red-dark);
+  border-color: var(--color-red);
+}
+
+.pixel-btn.danger:hover {
+  background: var(--color-red);
+}
+
+/* 像素愛心生命值 */
+.pixel-heart {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: var(--color-red);
+  position: relative;
+  transform: rotate(-45deg);
+  margin: 0 4px;
+}
+
+.pixel-heart::before,
+.pixel-heart::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: var(--color-red);
+}
+
+.pixel-heart::before {
+  top: -8px;
+  left: 0;
+}
+
+.pixel-heart::after {
+  left: 8px;
+  top: 0;
+}
+
+/* 像素星星 */
+.pixel-star {
+  display: inline-block;
+  font-size: 16px;
+  color: var(--color-yellow);
+  text-shadow: 2px 2px 0 var(--color-yellow-dark);
+  animation: twinkle 1s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* 閃爍游標效果 */
+.blink {
+  animation: blink var(--blink-speed) step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ========================================
+   App 容器與背景
+   ======================================== */
+
+.app-container {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 像素網格背景 */
+.background-effects {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background: 
+    linear-gradient(90deg, rgba(0,255,0,0.03) 1px, transparent 1px),
+    linear-gradient(rgba(0,255,0,0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.gradient-orb, .grid-overlay {
+  display: none; /* 不使用漸層球 */
+}
+
+.main-content {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+/* ========================================
+   載入畫面 - 復古風格
+   ======================================== */
+
+.loading-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  position: relative;
+}
+
+.loading-content {
+  text-align: center;
+}
+
+.loading-logo {
+  font-size: 64px;
+  margin-bottom: 24px;
+  animation: bounce 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-8px); }
+}
+
+.loading-title {
+  font-family: var(--font-pixel);
+  font-size: 24px;
+  color: var(--color-green);
+  text-shadow: 
+    4px 4px 0 var(--color-green-dark),
+    -2px -2px 0 var(--color-black);
+  margin-bottom: 32px;
+  letter-spacing: 2px;
+}
+
+.loading-bar-container {
+  width: 320px;
+  height: 24px;
+  background: var(--color-dark-gray);
+  border: var(--border-pixel);
+  margin: 0 auto 24px;
+  padding: 4px;
+  box-shadow: 
+    var(--pixel) var(--pixel) 0 var(--color-black);
+}
+
+.loading-bar {
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-green) 0px,
+    var(--color-green) 8px,
+    var(--color-green-dark) 8px,
+    var(--color-green-dark) 16px
+  );
+  animation: loading-progress 2s linear infinite;
+}
+
+@keyframes loading-progress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.loading-message {
+  color: var(--color-cyan);
+  font-size: 10px;
+  animation: blink 1s step-end infinite;
+}
+
+.loading-message::after {
+  content: '_';
+  animation: blink 0.5s step-end infinite;
+}
+
+.loading-particles {
+  display: none;
+}
+
+/* ========================================
+   大廳頁面 - 復古風格
+   ======================================== */
+
+.lobby-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 48px);
+}
+
+.lobby-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 4px dashed var(--color-gray);
+  margin-bottom: 24px;
+}
+
+.lobby-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lobby-title {
+  font-family: var(--font-pixel);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--color-yellow);
+  text-shadow: 
+    4px 4px 0 var(--color-yellow-dark),
+    -2px -2px 0 var(--color-black);
+}
+
+.title-icon {
+  font-size: 24px;
+  animation: bounce 0.5s ease-in-out infinite alternate;
+}
+
+.lobby-subtitle {
+  color: var(--color-cyan);
+  font-size: 10px;
+  font-family: var(--font-pixel);
+}
+
+/* 房主徽章 - 像素風格 */
+.host-badge {
+  background: var(--color-yellow);
+  color: var(--color-black);
+  padding: 8px 16px;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  border: var(--border-pixel);
+  border-color: var(--color-yellow-dark);
+  box-shadow: 
+    var(--pixel) var(--pixel) 0 var(--color-black);
+  animation: pulse-glow 1s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: var(--pixel) var(--pixel) 0 var(--color-black); }
+  50% { box-shadow: var(--pixel) var(--pixel) 0 var(--color-black), 0 0 8px var(--color-yellow); }
+}
+
+.lobby-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .lobby-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 4px dotted var(--color-gray);
+}
+
+.section-header h2 {
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-green);
+  text-transform: uppercase;
+}
+
+.section-icon {
+  font-size: 16px;
+}
+
+.player-count {
+  background: var(--color-dark-gray);
+  border: 2px solid var(--color-green);
+  padding: 4px 12px;
+  font-size: 10px;
+  color: var(--color-green);
+  font-family: var(--font-pixel);
+}
+
+/* 玩家區塊 */
+.players-section {
+  background: var(--color-bg-card);
+  border: var(--border-pixel);
+  padding: 20px;
+  box-shadow: 
+    var(--pixel) var(--pixel) 0 var(--color-dark-gray),
+    calc(var(--pixel) * 2) calc(var(--pixel) * 2) 0 rgba(0,0,0,0.5);
+  position: relative;
+}
+
+/* 角落裝飾 */
+.players-section::before {
+  content: '♠';
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 16px;
+  color: var(--color-gray);
+}
+
+.players-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px;
+  color: var(--color-gray);
+}
+
+.empty-icon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 12px;
+  animation: bounce 0.5s ease-in-out infinite alternate;
+}
+
+/* 玩家卡片 - 像素風格 */
+.player-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--color-bg-elevated);
+  border: 2px solid var(--color-gray);
+  cursor: default;
+  position: relative;
+  transition: none;
+}
+
+.player-card:hover {
+  border-color: var(--color-cyan);
+  background: var(--color-dark-navy);
+}
+
+.player-card.is-current-user {
+  border-color: var(--color-green);
+  background: rgba(0, 255, 0, 0.1);
+}
+
+.player-card.is-host {
+  border-color: var(--color-yellow);
+}
+
+.player-avatar-wrapper {
+  position: relative;
+}
+
+.player-avatar {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--color-cyan);
+  background: var(--color-dark-gray);
+  /* 像素化頭像 */
+  image-rendering: pixelated;
+}
+
+.host-crown {
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  font-size: 16px;
+  animation: bounce 0.3s ease-in-out infinite alternate;
+}
+
+.current-user-indicator {
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  font-size: 12px;
+}
+
+.player-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.player-name {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--color-cream);
+}
+
+.you-tag {
+  color: var(--color-green);
+  font-size: 8px;
+  margin-left: 8px;
+}
+
+.player-role {
+  font-size: 8px;
+  color: var(--color-yellow);
+  font-family: var(--font-pixel);
+}
+
+.player-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+}
+
+.status-dot.online {
+  background: var(--color-green);
+  animation: blink 1s step-end infinite;
+  box-shadow: 0 0 4px var(--color-green);
+}
+
+/* 遊戲選擇區 */
+.games-section {
+  background: var(--color-bg-card);
+  border: var(--border-pixel);
+  padding: 20px;
+  box-shadow: 
+    var(--pixel) var(--pixel) 0 var(--color-dark-gray),
+    calc(var(--pixel) * 2) calc(var(--pixel) * 2) 0 rgba(0,0,0,0.5);
+  position: relative;
+}
+
+.games-section::before {
+  content: '♦';
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 16px;
+  color: var(--color-gray);
+}
+
+.games-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 遊戲卡片 - 像素風格 */
+.game-card {
+  background: var(--color-bg-elevated);
+  border: 2px solid var(--color-gray);
+  padding: 16px;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+  position: relative;
+  transition: none;
+}
+
+.game-card.playable {
+  border-color: var(--color-green);
+}
+
+.game-card.playable:hover {
+  background: rgba(0, 255, 0, 0.1);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--color-green-dark);
+}
+
+.game-card.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: var(--color-dark-gray);
+}
+
+.game-icon {
+  font-size: 32px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-dark-gray);
+  border: 2px solid var(--color-gray);
+}
+
+.game-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.game-name {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  color: var(--color-yellow);
+}
+
+.game-description {
+  font-size: 10px;
+  color: var(--color-light-gray);
+  font-family: var(--font-pixel-alt);
+}
+
+.game-requirements {
+  display: flex;
+  gap: 12px;
+  font-size: 10px;
+  font-family: var(--font-pixel);
+}
+
+.player-range {
+  color: var(--color-cyan);
+}
+
+.needs-more {
+  color: var(--color-red);
+  animation: blink 1s step-end infinite;
+}
+
+.play-status {
+  padding: 6px 12px;
+  font-size: 8px;
+  font-family: var(--font-pixel);
+  border: 2px solid;
+}
+
+.play-status.ready {
+  background: var(--color-green-dark);
+  border-color: var(--color-green);
+  color: var(--color-black);
+}
+
+.play-status.waiting {
+  background: var(--color-red-dark);
+  border-color: var(--color-red);
+  color: var(--color-cream);
+}
+
+/* 等待區 */
+.waiting-section {
+  background: var(--color-bg-card);
+  border: var(--border-pixel);
+  padding: 20px;
+  box-shadow: 
+    var(--pixel) var(--pixel) 0 var(--color-dark-gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.waiting-content {
+  text-align: center;
+}
+
+.waiting-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  animation: bounce 0.5s ease-in-out infinite alternate;
+}
+
+.waiting-content h3 {
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: var(--color-cyan);
+}
+
+.waiting-content p {
+  color: var(--color-gray);
+  font-size: 10px;
+  font-family: var(--font-pixel);
+}
+
+/* 確認對話框 - 像素風格 */
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.confirm-dialog {
+  background: var(--color-bg-card);
+  border: var(--border-pixel);
+  padding: 32px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 
+    8px 8px 0 var(--color-dark-gray),
+    16px 16px 0 rgba(0,0,0,0.5);
+}
+
+.confirm-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.confirm-dialog h3 {
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: var(--color-yellow);
+}
+
+.confirm-dialog p {
+  color: var(--color-light-gray);
+  margin-bottom: 24px;
+  font-size: 10px;
+  font-family: var(--font-pixel);
+}
+
+.confirm-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.btn-cancel, .btn-confirm {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  padding: 12px 24px;
+  border: var(--border-pixel);
+  cursor: pointer;
+  box-shadow: var(--pixel) var(--pixel) 0 var(--color-black);
+}
+
+.btn-cancel {
+  background: var(--color-dark-gray);
+  color: var(--color-cream);
+  border-color: var(--color-gray);
+}
+
+.btn-cancel:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--color-black);
+}
+
+.btn-confirm {
+  background: var(--color-green-dark);
+  color: var(--color-black);
+  border-color: var(--color-green);
+}
+
+.btn-confirm:hover {
+  background: var(--color-green);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--color-black);
+}
+
+/* 底部 */
+.lobby-footer {
+  padding: 16px 0;
+  border-top: 4px dashed var(--color-gray);
+  margin-top: 24px;
+}
+
+.footer-info {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+}
+
+.info-item {
+  color: var(--color-gray);
+  font-size: 8px;
+  font-family: var(--font-pixel);
+}
+
+/* ========================================
+   一夜狼人殺遊戲 - 復古風格
+   ======================================== */
+
+.werewolf-game {
+  max-width: 1100px;
+  margin: 0 auto;
+  min-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+}
+
+.game-header {
+  text-align: center;
+  padding: 16px 0;
+  border-bottom: 4px dashed var(--color-gray);
+  margin-bottom: 24px;
+}
+
+.game-header h1 {
+  font-family: var(--font-pixel);
+  font-size: 24px;
+  margin-bottom: 16px;
+  color: var(--color-red);
+  text-shadow: 
+    4px 4px 0 var(--color-red-dark),
+    -2px -2px 0 var(--color-black);
+  animation: flicker 2s infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.8; }
+  94% { opacity: 1; }
+  95% { opacity: 0.9; }
+  96% { opacity: 1; }
+}
+
+.phase-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.phase {
+  padding: 8px 20px;
+  font-size: 10px;
+  font-family: var(--font-pixel);
+  border: 2px solid;
+  text-transform: uppercase;
+}
+
+.phase.setup { 
+  background: var(--color-dark-gray); 
+  color: var(--color-cyan);
+  border-color: var(--color-cyan);
+}
+.phase.night { 
+  background: var(--color-navy); 
+  color: var(--color-blue);
+  border-color: var(--color-blue);
+}
+.phase.discussion { 
+  background: var(--color-yellow-dark); 
+  color: var(--color-black);
+  border-color: var(--color-yellow);
+}
+.phase.voting { 
+  background: var(--color-red-dark); 
+  color: var(--color-cream);
+  border-color: var(--color-red);
+}
+.phase.result { 
+  background: var(--color-green-dark); 
+  color: var(--color-black);
+  border-color: var(--color-green);
+}
+
+.timer {
+  font-family: var(--font-pixel);
+  font-size: 20px;
+  color: var(--color-yellow);
+  animation: blink 1s step-end infinite;
+}
+
+.game-main {
+  flex: 1;
+}
+
+/* 設置階段 */
+.setup-phase {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.setup-content {
+  text-align: center;
+}
+
+.setup-content h2 {
+  font-family: var(--font-pixel);
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: var(--color-green);
+}
+
+.my-role-section {
+  margin: 32px 0;
+}
+
+.my-role-section h3 {
+  margin-bottom: 16px;
+  color: var(--color-gray);
+  font-size: 10px;
+  font-family: var(--font-pixel);
+  text-transform: uppercase;
+}
+
+/* 角色卡片 - 像素風格 */
+.role-card {
+  background: var(--color-bg-card);
+  border: 4px solid var(--role-color, var(--color-green));
+  padding: 32px 48px;
+  display: inline-block;
+  box-shadow: 
+    8px 8px 0 var(--color-dark-gray),
+    16px 16px 0 rgba(0,0,0,0.5);
+  position: relative;
+}
+
+.role-card::before {
+  content: '★';
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 12px;
+  color: var(--color-yellow);
+}
+
+.role-card::after {
+  content: '★';
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 12px;
+  color: var(--color-yellow);
+}
+
+.role-emoji {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.role-name {
+  font-family: var(--font-pixel);
+  font-size: 16px;
+  color: var(--color-cream);
+  margin-bottom: 12px;
+}
+
+.role-team {
+  font-size: 10px;
+  padding: 4px 12px;
+  display: inline-block;
+  font-family: var(--font-pixel);
+  border: 2px solid;
+}
+
+.role-team.wolf {
+  background: var(--color-red-dark);
+  color: var(--color-cream);
+  border-color: var(--color-red);
+}
+
+.role-team.village {
+  background: var(--color-green-dark);
+  color: var(--color-black);
+  border-color: var(--color-green);
+}
+
+.btn-start-night {
+  margin-top: 32px;
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  padding: 16px 32px;
+  background: var(--color-blue-dark);
+  color: var(--color-cream);
+  border: 4px solid var(--color-blue);
+  cursor: pointer;
+  box-shadow: var(--pixel) var(--pixel) 0 var(--color-black);
+}
+
+.btn-start-night:hover {
+  background: var(--color-blue);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--color-black);
+}
+
+/* 夜晚階段 */
+.night-phase {
+  position: relative;
+  min-height: 400px;
+  border: var(--border-pixel);
+  overflow: hidden;
+  background: #05051a;
+}
+
+.night-sky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, #05051a 0%, #0a0a2a 50%, #05051a 100%);
+}
+
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* 像素化星星 */
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, white, transparent),
+    radial-gradient(2px 2px at 80px 50px, #ffff00, transparent),
+    radial-gradient(2px 2px at 140px 80px, white, transparent),
+    radial-gradient(2px 2px at 200px 40px, white, transparent),
+    radial-gradient(2px 2px at 260px 90px, #ffff00, transparent);
+  background-repeat: repeat;
+  background-size: 300px 150px;
+  animation: twinkle-stars 2s step-start infinite;
+}
+
+@keyframes twinkle-stars {
+  0%, 50% { opacity: 1; }
+  25%, 75% { opacity: 0.7; }
+}
+
+.moon {
+  position: absolute;
+  top: 16px;
+  right: 32px;
+  font-size: 32px;
+}
+
+.night-content {
+  position: relative;
+  z-index: 1;
+  padding: 32px;
+  text-align: center;
+}
+
+.night-content h2 {
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  margin-bottom: 20px;
+  color: var(--color-blue);
+}
+
+.my-role-mini {
+  background: var(--color-dark-gray);
+  display: inline-block;
+  padding: 8px 20px;
+  margin-bottom: 24px;
+  border: 2px solid var(--color-cyan);
+  color: var(--color-cyan);
+  font-size: 10px;
+  font-family: var(--font-pixel);
+}
+
+/* 行動面板 */
+.action-panel {
+  background: var(--color-bg-card);
+  border: 4px solid var(--color-green);
+  padding: 24px;
+  margin-top: 20px;
+  box-shadow: 
+    var(--pixel) var(--pixel) 0 var(--color-green-dark);
+}
+
+.action-panel h3 {
+  color: var(--color-yellow);
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.action-panel p {
+  color: var(--color-light-gray);
+  margin-bottom: 20px;
+  font-size: 10px;
+  font-family: var(--font-pixel);
+}
+
+/* 玩家選擇器 */
+.player-selector, .center-card-selector {
+  margin: 20px 0;
+}
+
+.player-selector h4, .center-card-selector h4 {
+  margin-bottom: 12px;
+  color: var(--color-gray);
+  font-size: 10px;
+  font-family: var(--font-pixel);
+}
+
+.player-options, .center-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.player-option, .center-card {
+  padding: 10px 20px;
+  background: var(--color-dark-gray);
+  border: 2px solid var(--color-gray);
+  color: var(--color-cream);
+  cursor: pointer;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+}
+
+.player-option:hover, .center-card:hover {
+  border-color: var(--color-cyan);
+}
+
+.player-option.selected, .center-card.selected {
+  border-color: var(--color-green);
+  background: var(--color-green-dark);
+  color: var(--color-black);
+}
+
+.center-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 24px;
+}
+
+.card-back {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.card-label {
+  font-size: 8px;
+}
+
+.btn-confirm-action {
+  margin-top: 20px;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  padding: 12px 28px;
+  background: var(--color-green-dark);
+  color: var(--color-black);
+  border: 4px solid var(--color-green);
+  cursor: pointer;
+  box-shadow: var(--pixel) var(--pixel) 0 var(--color-black);
+}
+
+.btn-confirm-action:hover {
+  background: var(--color-green);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--color-black);
+}
+
+.btn-confirm-action:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* 行動結果 */
+.action-result {
+  background: var(--color-green-dark);
+  border: 2px solid var(--color-green);
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.action-result p {
+  margin: 0;
+  color: var(--color-black);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+}
+
+/* 討論階段 */
+.discussion-phase {
+  text-align: center;
+  padding: 32px;
+  position: relative;
+}
+
+.sun-bg {
+  font-size: 48px;
+  position: absolute;
+  top: 16px;
+  right: 32px;
+  animation: bounce 0.5s ease-in-out infinite alternate;
+}
+
+.discussion-phase h2 {
+  font-family: var(--font-pixel);
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: var(--color-yellow);
+}
+
+.discussion-warning {
+  color: var(--color-red);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  margin-bottom: 20px;
+  animation: blink 1s step-end infinite;
+}
+
+.discussion-timer {
+  font-family: var(--font-pixel);
+  font-size: 32px;
+  color: var(--color-yellow);
+  margin: 24px 0;
+  text-shadow: 4px 4px 0 var(--color-yellow-dark);
+}
+
+.players-discussion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.discussion-player {
+  padding: 10px 20px;
+  background: var(--color-dark-gray);
+  border: 2px solid var(--color-cyan);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+}
+
+.btn-start-voting {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  padding: 14px 32px;
+  background: var(--color-red-dark);
+  color: var(--color-cream);
+  border: 4px solid var(--color-red);
+  cursor: pointer;
+  box-shadow: var(--pixel) var(--pixel) 0 var(--color-black);
+}
+
+.btn-start-voting:hover {
+  background: var(--color-red);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--color-black);
+}
+
+/* 投票階段 */
+.voting-section {
+  text-align: center;
+  padding: 32px;
+}
+
+.voting-section h3 {
+  font-family: var(--font-pixel);
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: var(--color-red);
+}
+
+.vote-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.vote-option {
+  padding: 12px 24px;
+  background: var(--color-dark-gray);
+  border: 2px solid var(--color-gray);
+  color: var(--color-cream);
+  cursor: pointer;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+}
+
+.vote-option:hover {
+  border-color: var(--color-red);
+}
+
+.vote-option.selected {
+  border-color: var(--color-red);
+  background: var(--color-red-dark);
+  animation: pulse-glow 0.5s ease-in-out infinite;
+}
+
+.btn-vote {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  padding: 14px 32px;
+  background: var(--color-red-dark);
+  color: var(--color-cream);
+  border: 4px solid var(--color-red);
+  cursor: pointer;
+  box-shadow: var(--pixel) var(--pixel) 0 var(--color-black);
+}
+
+.btn-vote:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.vote-progress {
+  margin-top: 20px;
+  color: var(--color-gray);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+}
+
+/* 結果階段 */
+.result-section {
+  text-align: center;
+  padding: 32px;
+}
+
+.result-title {
+  font-family: var(--font-pixel);
+  font-size: 24px;
+  margin-bottom: 24px;
+  animation: flicker 0.5s infinite;
+}
+
+.result-title.village {
+  color: var(--color-green);
+  text-shadow: 4px 4px 0 var(--color-green-dark);
+}
+
+.result-title.wolf {
+  color: var(--color-red);
+  text-shadow: 4px 4px 0 var(--color-red-dark);
+}
+
+.eliminated-players {
+  background: var(--color-dark-gray);
+  border: 4px solid var(--color-red);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.eliminated-player {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  padding: 8px;
+  color: var(--color-red);
+}
+
+.all-roles h4, .eliminated-players h4 {
+  margin-bottom: 16px;
+  color: var(--color-gray);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.role-reveal {
+  background: var(--color-dark-gray);
+  border: 2px solid var(--color-gray);
+  padding: 16px;
+  text-align: left;
+}
+
+.role-reveal .player-name {
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+}
+
+.original-role, .final-role {
+  display: block;
+  font-size: 10px;
+  font-family: var(--font-pixel);
+  color: var(--color-gray);
+}
+
+.final-role {
+  color: var(--color-yellow);
+}
+
+.result-actions {
+  margin-top: 32px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.btn-restart, .btn-lobby {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  padding: 12px 28px;
+  border: 4px solid;
+  cursor: pointer;
+  box-shadow: var(--pixel) var(--pixel) 0 var(--color-black);
+}
+
+.btn-restart {
+  background: var(--color-green-dark);
+  color: var(--color-black);
+  border-color: var(--color-green);
+}
+
+.btn-restart:hover {
+  background: var(--color-green);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--color-black);
+}
+
+.btn-lobby {
+  background: var(--color-dark-gray);
+  color: var(--color-cream);
+  border-color: var(--color-gray);
+}
+
+.btn-lobby:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--color-black);
+}
+
+/* ========================================
+   遊戲 B (開發中)
+   ======================================== */
+
+.game-b-container {
+  min-height: calc(100vh - 48px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.coming-soon {
+  text-align: center;
+  background: var(--color-bg-card);
+  border: var(--border-pixel);
+  padding: 48px;
+  max-width: 480px;
+  box-shadow: 
+    8px 8px 0 var(--color-dark-gray),
+    16px 16px 0 rgba(0,0,0,0.5);
+}
+
+.construction-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+  animation: bounce 0.5s ease-in-out infinite alternate;
+}
+
+.coming-soon h1 {
+  font-family: var(--font-pixel);
+  font-size: 20px;
+  margin-bottom: 12px;
+  color: var(--color-yellow);
+}
+
+.coming-soon h2 {
+  color: var(--color-cyan);
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  margin-bottom: 20px;
+  animation: blink 1s step-end infinite;
+}
+
+.coming-soon .description {
+  color: var(--color-gray);
+  margin-bottom: 24px;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  line-height: 2;
+}
+
+.progress-section {
+  margin: 24px 0;
+}
+
+.progress-label {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--color-gray);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+}
+
+.progress-bar {
+  height: 16px;
+  background: var(--color-dark-gray);
+  border: 2px solid var(--color-gray);
+  padding: 2px;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-green) 0px,
+    var(--color-green) 8px,
+    var(--color-green-dark) 8px,
+    var(--color-green-dark) 16px
+  );
+}
+
+.progress-percent {
+  color: var(--color-green);
+  font-family: var(--font-pixel);
+  font-size: 12px;
+}
+
+.features-preview {
+  text-align: left;
+  margin: 24px 0;
+}
+
+.features-preview h3 {
+  margin-bottom: 16px;
+  text-align: center;
+  color: var(--color-cyan);
+  font-family: var(--font-pixel);
+  font-size: 12px;
+}
+
+.features-preview ul {
+  list-style: none;
+}
+
+.features-preview li {
+  padding: 10px 0;
+  border-bottom: 2px dashed var(--color-dark-gray);
+  color: var(--color-light-gray);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+}
+
+.features-preview li:last-child {
+  border-bottom: none;
+}
+
+.btn-back-lobby {
+  margin-top: 20px;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  padding: 12px 28px;
+  background: var(--color-dark-gray);
+  color: var(--color-cream);
+  border: 4px solid var(--color-gray);
+  cursor: pointer;
+  box-shadow: var(--pixel) var(--pixel) 0 var(--color-black);
+}
+
+.btn-back-lobby:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--color-black);
+}
+
+.waiting-host {
+  margin-top: 20px;
+  color: var(--color-gray);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+}
+
+.bg-decorations {
+  display: none;
+}
+
+.floating-gear {
+  display: none;
+}
+
+/* ========================================
+   錯誤提示
+   ======================================== */
+
+.error-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-red-dark);
+  color: var(--color-cream);
+  padding: 12px 24px;
+  border: 4px solid var(--color-red);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  z-index: 1000;
+  box-shadow: var(--pixel) var(--pixel) 0 var(--color-black);
+}
+
+/* ========================================
+   響應式設計
+   ======================================== */
+
+@media (max-width: 768px) {
+  body {
+    font-size: 10px;
+  }
+
+  .main-content {
+    padding: 12px;
+  }
+
+  .lobby-header {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .lobby-title {
+    font-size: 16px;
+  }
+
+  .lobby-content {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .game-header h1 {
+    font-size: 16px;
+  }
+
+  .role-card {
+    padding: 20px 28px;
+  }
+
+  .role-emoji {
+    font-size: 36px;
+  }
+
+  .role-name {
+    font-size: 12px;
+  }
+
+  .confirm-dialog {
+    margin: 16px;
+    padding: 24px;
+  }
+
+  .coming-soon {
+    margin: 16px;
+    padding: 32px 20px;
+  }
+
+  .discussion-timer {
+    font-size: 24px;
+  }
+
+  .result-title {
+    font-size: 18px;
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "tyh-studio",
+  "version": "1.0.0",
+  "description": "Discord Bot + Activity Platform by Tiger228",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "deploy-commands": "node scripts/deploy-commands.js",
+    "activity:install": "cd discord_sdk/server && npm install && cd ../client && npm install",
+    "activity:dev": "cd discord_sdk/client && npm run dev",
+    "activity:build": "cd discord_sdk/client && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tylertam228/TyhStudio.git"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "discord.js",
+    "supabase"
+  ],
+  "author": "Tyler Tam (Tiger228)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tylertam228/TyhStudio/issues"
+  },
+  "homepage": "https://github.com/tylertam228/TyhStudio#readme",
+  "dependencies": {
+    "@fastify/cors": "^9.0.1",
+    "@supabase/supabase-js": "^2.45.0",
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.28.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
