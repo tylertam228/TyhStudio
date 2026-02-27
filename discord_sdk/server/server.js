@@ -299,6 +299,20 @@ io.on("connection", (socket) => {
 });
 
 // ========================================
+// Production: serve Vite built files
+// ========================================
+
+const clientDistPath = path.resolve(__dirname, "../client/dist");
+app.use(express.static(clientDistPath));
+
+app.get("*", (req, res, next) => {
+  if (req.path.startsWith("/api") || req.path.startsWith("/socket.io")) {
+    return next();
+  }
+  res.sendFile(path.join(clientDistPath, "index.html"));
+});
+
+// ========================================
 // 啟動伺服器
 // ========================================
 

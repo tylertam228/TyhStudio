@@ -29,7 +29,6 @@
 ### 🤖 Discord Bot
 
 - **Group Restaurant Picker** - Shared restaurant list with random pick
-- **Scheduled Messages** - Automated timed messaging
 - **IQ Rank Commands** - Check rankings, history & challenges
 - **Web Dashboard** - Health & API endpoints
 
@@ -51,7 +50,7 @@
 
 - **Project Portal** - Browse TYH Studio projects
 - **Real-time Lobby** - WebSocket powered room system
-- **8-bit Aesthetic** - Pixel art style UI
+- **Cyberpunk Neon UI** - Terminal-style dark theme
 - **Admin Panel** - Manage projects & whitelist
 
 </td>
@@ -64,15 +63,8 @@
 
 | Category | Command | Description |
 |:--------:|---------|-------------|
-| 🍽️ | `/eat` | Group restaurant picker (guild-restricted) |
-| 🧠 | `/iq rank` | View current IQ rankings |
-| 🧠 | `/iq history` | View personal rank history |
-| 🧠 | `/iq status` | Check monthly voting status |
-| 🧠 | `/iq challenges` | View active challenges |
-| 🧠 | `/iq whitelist add` | Add user to whitelist (admin) |
-| 🧠 | `/iq whitelist remove` | Remove from whitelist (admin) |
-| 🧠 | `/iq whitelist list` | View whitelist (admin) |
-| ⏰ | `/schedule-msg` | Scheduled messages |
+| 🍽️ | `/eat` | Group restaurant picker |
+| 🧠 | `/iq` | IQ ranking system |
 | 🏓 | `/ping` | Check bot latency |
 | 🐯 | `/tiger228_info` | About the developer |
 
@@ -85,6 +77,18 @@
 | `/eat list` | View all restaurants in the group |
 | `/eat rate` | Rate a restaurant |
 | `/eat delete` | Delete a restaurant (owner only) |
+
+### `/iq` Subcommands
+
+| Subcommand | Description |
+|------------|-------------|
+| `/iq rank` | View current IQ rankings |
+| `/iq history` | View personal rank history |
+| `/iq status` | Check monthly voting status |
+| `/iq challenges` | View active challenges |
+| `/iq whitelist add` | Add user to whitelist (admin) |
+| `/iq whitelist remove` | Remove from whitelist (admin) |
+| `/iq whitelist list` | View whitelist (admin) |
 
 ---
 
@@ -166,7 +170,6 @@ TyhStudio/
 │   │   └── features/
 │   │       ├── eat/             # 🍽️ Group restaurant picker
 │   │       ├── iq/              # 🧠 IQ rank system (commands + scheduler)
-│   │       ├── scheduled-msg/   # ⏰ Scheduled messages
 │   │       ├── ping/            # 🏓 Ping
 │   │       └── tiger228-info/   # 🐯 Info
 │   ├── database/
@@ -240,17 +243,6 @@ pm2 save
 pm2 startup
 ```
 
-### Hosted Subdomains
-
-| Subdomain | Service | Type |
-|-----------|---------|------|
-| `tiger228.tyhstudio.com` | Portfolio | React (static) |
-| `cv.tyhstudio.com` | Resume | PDF file |
-| `ai.tyhstudio.com` | AI Feature | Coming soon |
-| `app.tyhstudio.com` | Project Portal + IQ System | Node.js |
-
----
-
 ## 🛠️ Tech Stack
 
 | Component | Technology |
@@ -274,7 +266,8 @@ pm2 startup
 ```bash
 npm start                # Start bot
 npm run dev              # Development mode
-npm run deploy-commands  # Deploy slash commands
+npm run deploy-commands         # Deploy to dev guilds
+npm run deploy-commands:global  # Deploy globally
 
 # Database (Prisma)
 npm run db:generate      # Generate Prisma client
@@ -291,7 +284,7 @@ npm run activity:build   # Production build
 
 ## 📄 License
 
-MIT © [Tyler Tam](https://tiger228.tyhstudio.com)
+MIT © [Tyler Tam](https://tyhstudio.com)
 
 ---
 

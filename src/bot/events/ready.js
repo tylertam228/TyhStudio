@@ -7,25 +7,12 @@ const { ActivityType } = require('discord.js');
 
 // Fun rotating activities
 const activities = [
-    { type: ActivityType.Playing, text: '和老虎玩躲貓貓 🐯' },
-    { type: ActivityType.Playing, text: '一夜狼人殺' },
-    { type: ActivityType.Playing, text: '假裝自己很聰明' },
-    { type: ActivityType.Watching, text: '你的每一個動作 👀' },
     { type: ActivityType.Watching, text: '老虎睡覺中...' },
     { type: ActivityType.Watching, text: 'Netflix 但不 Chill' },
-    { type: ActivityType.Listening, text: '你的心跳聲 ❤️' },
-    { type: ActivityType.Listening, text: 'Lo-Fi Beats' },
-    { type: ActivityType.Listening, text: '老闆的碎碎念' },
-    { type: ActivityType.Competing, text: '誰最會摸魚比賽' },
-    { type: ActivityType.Competing, text: '拖延症錦標賽' },
+    { type: ActivityType.Competing, text: '驗腦啦！IQ排行榜98！' },
     { type: ActivityType.Playing, text: '/help 獲取幫助' },
     { type: ActivityType.Watching, text: `${new Date().getFullYear()} 繼續努力!` },
     { type: ActivityType.Playing, text: '今天吃什麼？' },
-    { type: ActivityType.Listening, text: '你的願望 ⭐' },
-    { type: ActivityType.Playing, text: 'Bug 捉迷藏' },
-    { type: ActivityType.Watching, text: '程式碼自己跑' },
-    { type: ActivityType.Playing, text: '和 AI 聊天' },
-    { type: ActivityType.Competing, text: '最佳擺爛獎' },
     { type: ActivityType.Playing, text: 'tyhstudio.com' },
 ];
 
