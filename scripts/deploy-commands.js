@@ -12,6 +12,7 @@ const fs = require('fs');
 const path = require('path');
 
 const isGlobal = process.argv.includes('--global');
+const isClearGuilds = process.argv.includes('--clear-guilds');
 const commands = [];
 const featuresPath = path.join(__dirname, '../src/bot/features');
 
@@ -37,11 +38,33 @@ function loadCommandsFromFeatures() {
 }
 
 async function deployCommands() {
+    const rest = new REST().setToken(process.env.DISCORD_TOKEN);
+
+    if (isClearGuilds) {
+        console.log('Clearing guild-specific commands...\n');
+        const guildIds = (process.env.DISCORD_GUILD_ID || '').split(',').map(id => id.trim()).filter(Boolean);
+        if (guildIds.length === 0) {
+            console.log('No DISCORD_GUILD_ID set, nothing to clear.');
+            return;
+        }
+        try {
+            for (const guildId of guildIds) {
+                await rest.put(
+                    Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID, guildId),
+                    { body: [] }
+                );
+                console.log(`✅ Cleared guild: ${guildId}`);
+            }
+            console.log('\nDone! Guild-specific commands removed. Global commands remain.');
+        } catch (error) {
+            console.error('Failed to clear guild commands:', error);
+        }
+        return;
+    }
+
     console.log('Loading commands...');
     loadCommandsFromFeatures();
     console.log(`\nDeploying ${commands.length} commands ${isGlobal ? '(GLOBAL)' : '(GUILD)'}...\n`);
-    
-    const rest = new REST().setToken(process.env.DISCORD_TOKEN);
     
     try {
         if (isGlobal) {
