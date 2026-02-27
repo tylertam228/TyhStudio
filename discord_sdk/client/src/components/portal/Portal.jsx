@@ -1,17 +1,13 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { api } from '../../utils/api';
 import ProjectCard from './ProjectCard';
-import AdminPanel from './AdminPanel';
-
-const ADMIN_ID = '941708160870260746';
+import logo from '../../assets/Tiger228_code.jpg';
 
 const DEFAULT_PROJECTS = [];
 
 export default function Portal({ userId, onSelectIQ }) {
     const [projects, setProjects] = useState([]);
-    const [showAdmin, setShowAdmin] = useState(false);
-    const isAdmin = userId === ADMIN_ID;
 
     useEffect(() => {
         loadProjects();
@@ -34,7 +30,7 @@ export default function Portal({ userId, onSelectIQ }) {
                 animate={{ opacity: 1, y: 0 }}
             >
                 <h1 className="portal-title">
-                    <span className="title-icon">🐯</span>
+                    <img src={logo} alt="TYH Studio" className="title-logo" />
                     TYH Studio
                 </h1>
                 <p className="portal-subtitle">Projects by Tiger228</p>
@@ -65,31 +61,6 @@ export default function Portal({ userId, onSelectIQ }) {
                     </div>
                 </motion.div>
             </div>
-
-            {isAdmin && (
-                <motion.div
-                    className="admin-toggle"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                >
-                    <button className="pixel-btn" onClick={() => setShowAdmin(!showAdmin)}>
-                        {showAdmin ? '關閉管理' : '⚙️ 管理專案'}
-                    </button>
-                </motion.div>
-            )}
-
-            <AnimatePresence>
-                {showAdmin && (
-                    <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                    >
-                        <AdminPanel onRefresh={loadProjects} />
-                    </motion.div>
-                )}
-            </AnimatePresence>
         </div>
     );
 }

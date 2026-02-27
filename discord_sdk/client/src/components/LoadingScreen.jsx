@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
+import logo from '../assets/Tiger228_code.jpg';
 
 export default function LoadingScreen({ message = '載入中...' }) {
   return (
     <div className="loading-screen">
       <div className="loading-content">
-        {/* 動態 Logo */}
         <motion.div
           className="loading-logo"
           animate={{
@@ -17,7 +17,7 @@ export default function LoadingScreen({ message = '載入中...' }) {
             ease: 'easeInOut',
           }}
         >
-          🐯
+          <img src={logo} alt="TYH Studio" className="loading-logo-img" />
         </motion.div>
 
         <motion.h1

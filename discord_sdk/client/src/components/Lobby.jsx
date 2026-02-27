@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useGameStore } from '../store/gameStore';
 import PlayerCard from './PlayerCard';
+import logo from '../assets/Tiger228_code.jpg';
 
 export default function Lobby() {
   const { roomState, isHost, discordInfo } = useGameStore();
@@ -17,7 +18,7 @@ export default function Lobby() {
           transition={{ duration: 0.5 }}
         >
           <h1 className="lobby-title">
-            <span className="title-icon">🐯</span>
+            <img src={logo} alt="TYH Studio" className="title-logo" />
             TYH Studio
           </h1>
           <p className="lobby-subtitle">
