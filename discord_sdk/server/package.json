@@ -8,9 +8,17 @@
     "dev": "node server.js",
     "start": "node server.js"
   },
-  "keywords": ["discord", "activity", "game", "socket.io"],
+  "keywords": [
+    "discord",
+    "activity",
+    "game",
+    "socket.io"
+  ],
   "author": "Tiger228",
   "license": "ISC",
+  "prisma": {
+    "schema": "../../prisma/schema.prisma"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
     "cors": "^2.8.5",

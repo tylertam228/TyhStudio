@@ -22,6 +22,7 @@ console.log("[ENV] CLIENT_ID:", process.env.VITE_DISCORD_CLIENT_ID ? "SET" : "NO
 console.log("[ENV] CLIENT_SECRET:", process.env.DISCORD_CLIENT_SECRET ? "SET" : "NOT SET");
 
 import * as ActivityLogger from "./services/activityLogger.js";
+import iqRoutes from "./routes/iq.js";
 
 const app = express();
 const httpServer = createServer(app);
@@ -45,6 +46,12 @@ const port = process.env.ACTIVITY_PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
+
+// Share io with routes
+app.locals.io = io;
+
+// IQ Rank System API
+app.use("/api/iq", iqRoutes);
 
 // ========================================
 // 房間狀態管理
@@ -221,6 +228,37 @@ io.on("connection", (socket) => {
 
     io.to(channelId).emit("room_update", getRoomPublicState(room));
     socket.emit("host_status", { isHost: socket.id === room.hostId });
+  });
+
+  // ========================================
+  // IQ Discussion Board - Real-time Events
+  // ========================================
+  socket.on("iq_join_challenge", (data) => {
+    const { challengeId } = data;
+    if (challengeId) {
+      socket.join(`challenge_${challengeId}`);
+    }
+  });
+
+  socket.on("iq_leave_challenge", (data) => {
+    const { challengeId } = data;
+    if (challengeId) {
+      socket.leave(`challenge_${challengeId}`);
+    }
+  });
+
+  socket.on("iq_new_comment", (data) => {
+    const { challengeId, comment } = data;
+    if (challengeId) {
+      io.to(`challenge_${challengeId}`).emit("iq_comment_added", comment);
+    }
+  });
+
+  socket.on("iq_vote_update", (data) => {
+    const { challengeId, agreeCount, disagreeCount } = data;
+    if (challengeId) {
+      io.to(`challenge_${challengeId}`).emit("iq_vote_changed", { agreeCount, disagreeCount });
+    }
   });
 
   socket.on("disconnect", async () => {
