@@ -51,7 +51,6 @@
 - **Project Portal** - Browse TYH Studio projects
 - **Real-time Lobby** - WebSocket powered room system
 - **Cyberpunk Neon UI** - Terminal-style dark theme
-- **Admin Panel** - Manage projects & whitelist
 
 </td>
 </tr>
