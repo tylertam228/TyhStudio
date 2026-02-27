@@ -16,7 +16,7 @@ module.exports = {
       autorestart: true,
       restart_delay: 1000,
     },
-    // Discord Activity Server
+    // Discord Activity + IQ Server (app.tyhstudio.com)
     {
       name: 'discord-activity',
       script: 'server/server.js',
@@ -25,7 +25,7 @@ module.exports = {
       instances: 1,
       exec_mode: 'fork',
       watch: false,
-      max_memory_restart: '300M',
+      max_memory_restart: '500M',
       autorestart: true,
       restart_delay: 1000,
     },
