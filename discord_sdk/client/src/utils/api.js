@@ -34,10 +34,4 @@ export const api = {
     addComment: (id, stance, content) => request(`/challenges/${id}/comments`, { method: 'POST', body: JSON.stringify({ stance, content }) }),
     getBaseline: (userId) => request(`/baseline/${userId}`),
     getProjects: () => request('/projects'),
-    createProject: (data) => request('/admin/projects', { method: 'POST', body: JSON.stringify(data) }),
-    updateProject: (id, data) => request(`/admin/projects/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-    deleteProject: (id) => request(`/admin/projects/${id}`, { method: 'DELETE' }),
-    getWhitelist: () => request('/admin/whitelist'),
-    addWhitelist: (userId, username) => request('/admin/whitelist', { method: 'POST', body: JSON.stringify({ userId, username }) }),
-    removeWhitelist: (userId) => request(`/admin/whitelist/${userId}`, { method: 'DELETE' }),
 };
