@@ -48,7 +48,9 @@ module.exports = {
                 console.error('Error handling button:', error);
                 logError(error, `Button: ${interaction.customId}`).catch(err => console.error('Log error:', err));
                 
-                await interaction.reply({ content: 'Button error occurred', ephemeral: true });
+                if (!interaction.replied && !interaction.deferred) {
+                    await interaction.reply({ content: 'Button error occurred', ephemeral: true });
+                }
             }
         }
     }
@@ -59,7 +61,6 @@ async function handleButtonInteraction(interaction) {
     const parts = customId.split('_');
     const feature = parts[0];
 
-    // Load feature-specific button handler
     try {
         const featurePath = `../features/${feature}/command`;
         const featureModule = require(featurePath);

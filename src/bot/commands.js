@@ -26,12 +26,16 @@ async function loadCommands(client) {
         const commandPath = path.join(featuresPath, feature, 'command.js');
         
         if (fs.existsSync(commandPath)) {
-            const command = require(commandPath);
-            
-            if ('data' in command && 'execute' in command) {
-                client.commands.set(command.data.name, command);
-                console.log(`  Loaded: /${command.data.name}`);
-                commandCount++;
+            try {
+                const command = require(commandPath);
+                
+                if ('data' in command && 'execute' in command) {
+                    client.commands.set(command.data.name, command);
+                    console.log(`  Loaded: /${command.data.name}`);
+                    commandCount++;
+                }
+            } catch (err) {
+                console.error(`  ✗ Failed to load /${feature}:`, err.message);
             }
         }
     }
