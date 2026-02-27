@@ -17,8 +17,8 @@ export default function Lobby() {
           transition={{ duration: 0.5 }}
         >
           <h1 className="lobby-title">
-            <span className="title-icon">🎲</span>
-            遊戲大廳
+            <span className="title-icon">🐯</span>
+            TYH Studio
           </h1>
           <p className="lobby-subtitle">
             頻道：{discordInfo?.channelName || '未知'}

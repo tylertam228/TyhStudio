@@ -17,17 +17,16 @@ export default function LoadingScreen({ message = '載入中...' }) {
             ease: 'easeInOut',
           }}
         >
-          🎮
+          🐯
         </motion.div>
 
-        {/* 標題 */}
         <motion.h1
           className="loading-title"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          Tiger228 遊戲大廳
+          TYH Studio
         </motion.h1>
 
         {/* 載入進度條 */}
