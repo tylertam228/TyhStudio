@@ -19,7 +19,7 @@ module.exports = {
             .addFields(
                 { 
                     name: '🌐 網站', 
-                    value: '[tylertam228.github.io](https://tylertam228.github.io/)',
+                    value: '[tyhstudio.com](https://tyhstudio.com)',
                     inline: true 
                 },
                 { 
