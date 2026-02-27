@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["iq"]
+}
+
+model User {
+  id          String   @id // Discord User ID
+  username    String
+  displayName String?
+  currentRank Int?
+  isWhitelist Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@map("iq_users")
+  @@schema("iq")
+}
+
+model MonthlyVote {
+  id                String    @id @default(cuid())
+  month             String // YYYY-MM
+  isOpen            Boolean   @default(true)
+  resultPublishedAt DateTime?
+
+  @@map("iq_monthly_votes")
+  @@schema("iq")
+}
+
+model VoteEntry {
+  id          String   @id @default(cuid())
+  voterId     String
+  month       String
+  rankedOrder Json // User ID array, highest to lowest
+  submittedAt DateTime @default(now())
+
+  @@unique([voterId, month])
+  @@map("iq_vote_entries")
+  @@schema("iq")
+}
+
+model MonthlyResult {
+  id        String @id @default(cuid())
+  month     String
+  userId    String
+  finalRank Int
+
+  @@unique([month, userId])
+  @@map("iq_monthly_results")
+  @@schema("iq")
+}
+
+model Challenge {
+  id             String   @id @default(cuid())
+  proposerId     String
+  targetId       String
+  rankChange     Int // positive = up, negative = down
+  reason         String
+  status         String   @default("pending") // pending / approved / rejected / withdrawn
+  votingDeadline DateTime
+  createdAt      DateTime @default(now())
+
+  @@map("iq_challenges")
+  @@schema("iq")
+}
+
+model ChallengeVote {
+  id          String   @id @default(cuid())
+  challengeId String
+  voterId     String
+  vote        String // agree / disagree
+  votedAt     DateTime @default(now())
+
+  @@unique([challengeId, voterId])
+  @@map("iq_challenge_votes")
+  @@schema("iq")
+}
+
+model ChallengeComment {
+  id          String   @id @default(cuid())
+  challengeId String
+  authorId    String
+  stance      String // agree / disagree
+  content     String
+  createdAt   DateTime @default(now())
+
+  @@map("iq_challenge_comments")
+  @@schema("iq")
+}
+
+model QuarterlyBaseline {
+  id           String @id @default(cuid())
+  quarter      String // 2026-Q1
+  userId       String
+  baselineRank Int
+
+  @@unique([quarter, userId])
+  @@map("iq_quarterly_baselines")
+  @@schema("iq")
+}
+
+model PortalProject {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  url         String
+  imageUrl    String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("portal_projects")
+  @@schema("iq")
+}
