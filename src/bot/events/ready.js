@@ -37,8 +37,8 @@ module.exports = {
         activityIndex = Math.floor(Math.random() * activities.length);
         rotateActivity(client);
         
-        // Rotate activity every 5 minutes
-        setInterval(() => rotateActivity(client), 5 * 60 * 1000);
+        // Rotate activity every 45 seconds
+        setInterval(() => rotateActivity(client), 45 * 1000);
         
         // Initialize logger
         await initLogger(client);
