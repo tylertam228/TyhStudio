@@ -17,6 +17,11 @@ export default defineConfig(({ mode }) => {
     envDir: '../../',
     server: {
       proxy: {
+        '/api/iq': {
+          target: `http://localhost:${port}`,
+          changeOrigin: true,
+          secure: false,
+        },
         '/api': {
           target: `http://localhost:${port}`,
           changeOrigin: true,
