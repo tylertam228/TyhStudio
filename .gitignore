@@ -98,3 +98,5 @@ Discord Bot/
 *.bak
 *.backup
 .env.example.bak
+
+ecosystem.config.js
